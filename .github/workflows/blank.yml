@@ -37,6 +37,7 @@ jobs:
       run: |
         git add cnipv4.yaml cnipv6.yaml
         git commit -m "Update cnipv4 and cnipv6 files"
+        
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
