@@ -1,0 +1,52 @@
+name: File Download, Process, and Release
+
+on:
+  schedule:
+    - cron: '0 0 */15 * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Download and Process Files
+      run: |
+        curl -O https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+        cp cncidr.txt cnipv4.yaml
+        cp cncidr.txt cnipv6.yaml
+        sed -i '/::/d' cnipv4.yaml
+        awk '/^payload:/{f=1;next} f && /:/' cnipv6.yaml > tmp && mv tmp cnipv6.yaml
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: main
+        release_name: Result
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset for cnipv4.yaml
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cnipv4.yaml
+        asset_name: cnipv4.yaml
+        asset_content_type: text/plain
+
+    - name: Upload Release Asset for cnipv6.yaml
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cnipv6.yaml
+        asset_name: cnipv6.yaml
+        asset_content_type: text/plain
