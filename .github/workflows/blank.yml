@@ -1,4 +1,4 @@
-name: File Download, Process, and Release
+name: File Download and Push
 
 on:
   schedule:
@@ -20,39 +20,17 @@ jobs:
 
     - name: Download and Process Files
       run: |
-        curl -O https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+        curl -O //cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
         cp cncidr.txt cnipv4.yaml
         cp cncidr.txt cnipv6.yaml
         sed -i '/::/d' cnipv4.yaml
         awk '/^payload:/{f=1;next} f && /:/' cnipv6.yaml > tmp && mv tmp cnipv6.yaml
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        tag_name: result-${{ github.run_id }}
-        release_name: Result
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset for cnipv4.yaml
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./cnipv4.yaml
-        asset_name: cnipv4.yaml
-        asset_content_type: text/plain
-
-    - name: Upload Release Asset for cnipv6.yaml
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./cnipv6.yaml
-        asset_name: cnipv6.yaml
-        asset_content_type: text/plain
+    # 以下步骤将文件推送到远程仓库
+    - name: Push Files to Repository
+      run: |
+        git config user.name "linwei5d"
+        git config user.email "171436671@qq.com"
+        git add cnipv4.yaml cnipv6.yaml
+        git commit -m "Update cnipv4 and cnipv6 files"
+        git push
