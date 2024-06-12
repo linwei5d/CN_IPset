@@ -20,7 +20,7 @@ jobs:
 
     - name: Download and Process Files
       run: |
-        curl -O //cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+        curl -O http://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
         cp cncidr.txt cnipv4.yaml
         cp cncidr.txt cnipv6.yaml
         sed -i '/::/d' cnipv4.yaml
