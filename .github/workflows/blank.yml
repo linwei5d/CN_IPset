@@ -27,7 +27,7 @@ jobs:
         cp cncidr.txt cnipv4.yaml
         sed -i '/::/d' cnipv4.yaml
         echo "payload:" > cnipv6.yaml
-        awk '/:/' cncidr.txt >> cnipv6.yaml
+        awk '/::/' cncidr.txt >> cnipv6.yaml
 
     - name: Configure Git
       run: |
