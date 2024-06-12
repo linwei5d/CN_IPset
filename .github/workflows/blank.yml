@@ -13,7 +13,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
+    permissions:
+        contents: write
+      
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -39,6 +42,6 @@ jobs:
         git commit -m "Update cnipv4 and cnipv6 files"
         
     - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GH_TOKEN }}
+      uses: stefanzweifel/git-auto-commit-action@v5
+      # with:
+      #   github_token: ${{ secrets.GH_TOKEN }}
