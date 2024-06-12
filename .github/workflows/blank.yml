@@ -1,8 +1,14 @@
 name: File Download, Process, and Release
 
-# on:
-#   schedule:
-#     - cron: '0 0 */15 * *'
+on:
+  schedule:
+    - cron: '0 0 */15 * *'
+  workflow_dispatch:
+    inputs:
+        debug:
+          description: 'Run debug mode?'
+          required: false
+          type: boolean
 
 jobs:
   build:
