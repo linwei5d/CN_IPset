@@ -18,30 +18,16 @@ jobs:
         contents: write
       
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Download and Process Files
-      run: |
+    - uses: actions/checkout@v3
+    - run: |        
         curl -O https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
         cp cncidr.txt cnipv4.yaml
         sed -i '/::/d' cnipv4.yaml
         echo "payload:" > cnipv6.yaml
         awk '/::/' cncidr.txt >> cnipv6.yaml
 
-    - name: Configure Git
-      run: |
-        git config user.name "linwei5d"
-        git config user.email "171436671@qq.com"
-
-    - name: Push Files to Repository
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         git add cnipv4.yaml cnipv6.yaml
         git commit -m "Update cnipv4 and cnipv6 files"
-        
-    - name: Push changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      # with:
-      #   github_token: ${{ secrets.GH_TOKEN }}
+        git push
