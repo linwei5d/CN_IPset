@@ -37,4 +37,4 @@ jobs:
       run: |
         git add cnipv4.yaml cnipv6.yaml
         git commit -m "Update cnipv4 and cnipv6 files"
-        git push https://${GITHUB_TOKEN}@github.com/linwei5d/CN_IPset HEAD:main --force
+        git push https://${{ secrets.GH_TOKEN }}@github.com/linwei5d/CN_IPset HEAD:main --force
